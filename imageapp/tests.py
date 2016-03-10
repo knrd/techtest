@@ -29,8 +29,13 @@ class UploadFormLiveTest(LiveServerTestCase):
     def test_upload_file(self):
         self.browser.get(self.live_server_url)
         '''
-        image will be uploaded in img_cdn, in the future I should check os.path.exists before submiting form to be sure
+        Image will be uploaded in img_cdn, in the future I should check os.path.exists before submiting form to be sure
         not to overwrite existing file
+
+        I don't know how to check page status and content after executing
+        self.browser.find_element_by_name('submit').click()
+
+        @TODO: write test that check .click() status
         '''
         testname = 'test123test123'
         self.browser.find_element_by_name('name').send_keys(testname)
@@ -54,7 +59,7 @@ class UploadFormLiveTest(LiveServerTestCase):
         """
         response = self.client.get(reverse('imageapp:detail', args=(obj.name,)))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, str(obj.name))
+        self.assertContains(response, str(obj.name)+" image")
 
         # removing image
         os.remove(imgpath)
