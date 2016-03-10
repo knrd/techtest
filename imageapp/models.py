@@ -26,6 +26,9 @@ class Image(models.Model):
     def __unicode__(self):
         return self.name
 
+    # for Python 3
+    def __str__(self):
+        return self.name
 
 class ImageForm(ModelForm):
     def save(self, dname='', *args, **kwargs):
