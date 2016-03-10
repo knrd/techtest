@@ -11,25 +11,26 @@ def upload_path(instance, filename):
     ext = filename.split('.')[-1]
     newname = instance.name + "." + ext
 
-    # delete file if exists
-    # TODO: delete old file by database name (instead of generated newname) to avoid different file extensions problem
-    fullname = os.path.join(settings.MEDIA_ROOT, newname)
-    if os.path.exists(fullname):
-        os.remove(fullname)
-
     return newname
 
 
 class Image(models.Model):
     name = models.CharField(max_length=128, unique=True)
     # I could use ImageFiled instead, but it requires Pillow lib. To make this simple I leave FileField.
-    image = models.FileField(upload_to=upload_path)
+    image = models.FileField(upload_to=upload_path, blank=False, null=False)
 
     def __unicode__(self):
         return self.name
 
 
 class ImageForm(ModelForm):
+    def save(self, dname='', *args, **kwargs):
+        try:
+            timg = Image.objects.get(name=dname)
+            timg.image.delete(save=False)
+        except: pass
+        super(ImageForm, self).save(*args, **kwargs)
+
     class Meta:
         model = Image
         fields = ['name', 'image']

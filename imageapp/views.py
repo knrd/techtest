@@ -15,9 +15,9 @@ def main_form(request):
             obj = None
 
         form = ImageForm(request.POST, request.FILES, instance=obj)
-        if form.is_valid():
-            # file is saved
-            form.save()
+        # save changes only when new image is provided
+        if form.is_valid() and request.FILES:
+            form.save(dname=objname)
     else:
         form = ImageForm()
     return render(request, 'imageapp/mainform.html', {'formset': form})
