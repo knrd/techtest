@@ -1,9 +1,13 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.forms import ModelForm
-from django.conf import settings
-import os
+from django.core.exceptions import ValidationError
+import re
 
+# name field validator
+def validate_name(value):
+    if not re.match(r'^[a-z0-9_\-]+$', value, re.I):
+        raise ValidationError('Name field can contain only letters, digits and _, - chars')
 
 # naming image by name field
 def upload_path(instance, filename):
@@ -15,7 +19,7 @@ def upload_path(instance, filename):
 
 
 class Image(models.Model):
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128, unique=True, validators=[validate_name])
     # I could use ImageFiled instead, but it requires Pillow lib. To make this simple I leave FileField.
     image = models.FileField(upload_to=upload_path, blank=False, null=False)
 
