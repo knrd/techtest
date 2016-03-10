@@ -4,7 +4,17 @@ from .models import Image, ImageForm
 
 def main_form(request):
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
+        objname = ''
+        if 'name' in request.POST:
+            objname = request.POST['name']
+
+        # I try to fetch object to update image, if object exists
+        try:
+            obj = Image.objects.get(name=objname)
+        except Image.DoesNotExist:
+            obj = None
+
+        form = ImageForm(request.POST, request.FILES, instance=obj)
         if form.is_valid():
             # file is saved
             form.save()

@@ -12,6 +12,7 @@ def upload_path(instance, filename):
     newname = instance.name + "." + ext
 
     # delete file if exists
+    # TODO: delete old file by database name (instead of generated newname) to avoid different file extensions problem
     fullname = os.path.join(settings.MEDIA_ROOT, newname)
     if os.path.exists(fullname):
         os.remove(fullname)

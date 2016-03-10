@@ -35,7 +35,7 @@ class UploadFormLiveTest(LiveServerTestCase):
         I don't know how to check page status and content after executing
         self.browser.find_element_by_name('submit').click()
 
-        @TODO: write test that check .click() status
+        # TODO: write test that check .click() status
         '''
         testname = 'test123test123'
         self.browser.find_element_by_name('name').send_keys(testname)
