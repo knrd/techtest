@@ -1,0 +1,5 @@
+Django==1.9.4
+funcsigs==0.4
+pbr==1.8.1
+selenium==2.52.0
+six==1.10.0
