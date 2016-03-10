@@ -22,6 +22,10 @@ class UploadFormLiveTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Upload form', body.text)
 
+    def test_404_if_image_not_exists(self):
+        response = self.client.get(reverse('imageapp:detail', args=('doesnotexists',)))
+        self.assertEqual(response.status_code, 404)
+
     def test_upload_file(self):
         self.browser.get(self.live_server_url)
         '''
@@ -35,8 +39,22 @@ class UploadFormLiveTest(LiveServerTestCase):
 
         obj = Image.objects.get(name=testname)
 
+        """ chceck if image exists """
         imgpath = os.path.join(settings.MEDIA_ROOT, str(obj.image))
+        # print imgpath
         self.assertEqual(os.path.exists(imgpath), True)
+
+        """ chceck if image exists and is named by name field """
+        imgpath_expected = os.path.join(settings.MEDIA_ROOT, obj.name + "." + str(obj.image).split(".")[-1])
+        # print imgpath_expected
+        self.assertEqual(os.path.exists(imgpath_expected), True)
+
+        """
+        Status on details page
+        """
+        response = self.client.get(reverse('imageapp:detail', args=(obj.name,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, str(obj.name))
 
         # removing image
         os.remove(imgpath)
